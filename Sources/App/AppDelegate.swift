@@ -151,11 +151,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let customProviders: [UsageProvider] = preferences.customEndpoints.filter(\.isEnabled).map { endpoint in
                 CustomEndpointProvider(endpoint: endpoint)
             }
-            let allProviders: [UsageProvider] = claudeProviders
-                + [CursorLocalProvider()]
-                + codexProfiles.map { CodexLocalProvider(profile: $0) }
-                + antigravityProfiles.map { AntigravityProvider(profile: $0) }
-                + [GLMProvider(), MiniMaxProvider(web: miniMaxWeb), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
+            var allProviders: [UsageProvider] = claudeProviders
+            allProviders += [CursorLocalProvider()]
+            allProviders += codexProfiles.map { CodexLocalProvider(profile: $0) }
+            allProviders += antigravityProfiles.map { AntigravityProvider(profile: $0) }
+            allProviders += [GLMProvider(), MiniMaxProvider(web: miniMaxWeb), GrokLocalProvider(), DevinLocalProvider(), OpenCodeProvider(),
                    CommandCodeProvider(), GitHubCopilotProvider(), KimiProvider(), KiroProvider(), AmpProvider(),
                    OllamaLocalProvider(endpoint: URL(string: preferences.ollamaEndpoint)!),
                    LMStudioLocalProvider(endpoint: URL(string: preferences.lmstudioEndpoint)!),
@@ -166,8 +166,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                    GeminiAPIProvider(budget: {
                        Preferences.storedGeminiAPIMonthlyTokenBudget()
                    })]
-                + webProviders
-                + customProviders
+            allProviders += webProviders
+            allProviders += customProviders
             preferences.reconcile(discoveredIDs: allProviders.map(\.id))
             let store = UsageStore(
                 providers: allProviders,
