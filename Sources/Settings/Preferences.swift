@@ -244,6 +244,12 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(weeklyRingDashed, forKey: Keys.weeklyRingDashed) }
     }
 
+    /// Whether the reading under each ring adds the weekly percentage, as
+    /// "30%/70%". Only while the weekly ring is on.
+    @Published var weeklyReading: Bool {
+        didSet { defaults.set(weeklyReading, forKey: Keys.weeklyReading) }
+    }
+
     @Published var weeklyRing: WeeklyRing {
         didSet { defaults.set(weeklyRing.rawValue, forKey: Keys.weeklyRing) }
     }
@@ -488,6 +494,7 @@ final class Preferences: ObservableObject {
         // A new key, so there is nothing under the old app name to migrate.
         static let weeklyRing = "weeklyRing"
         static let weeklyRingDashed = "weeklyRingDashed"
+        static let weeklyReading = "weeklyReading"
         static let claudeDailyPaceRing = "claudeDailyPaceRing"
         static let showsMoveHandle = "showsMoveHandle"
         static let notchSurfaceStyle = "notchSurfaceStyle"
@@ -803,6 +810,7 @@ final class Preferences: ObservableObject {
         // Off by default: an extra arc in a 44pt circle is a change to how
         // every reading looks, and nobody asked for it on their behalf.
         self.weeklyRingDashed = defaults.object(forKey: Keys.weeklyRingDashed) as? Bool ?? false
+        self.weeklyReading = defaults.object(forKey: Keys.weeklyReading) as? Bool ?? false
 
         self.weeklyRing = defaults.string(forKey: Keys.weeklyRing)
             .flatMap(WeeklyRing.init(rawValue:)) ?? .off

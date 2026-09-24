@@ -268,7 +268,18 @@ struct ProviderCell: View {
 
     /// A dash, not "0%": nothing read is not the same as nothing used.
     private var readingText: String {
-        snapshot.hasReading ? snapshot.headlineText : "—"
+        guard snapshot.hasReading else { return "—" }
+        guard let weekly = weeklyReading else { return snapshot.headlineText }
+        return "\(snapshot.headlineText)/\(Percent.text(for: weekly))%"
+    }
+
+    @Environment(\.weeklyReading) private var showsWeeklyReading
+
+    /// The weekly fraction, when the weekly ring and its reading are on and
+    /// there is one to show beside the 5h reading.
+    private var weeklyReading: Double? {
+        guard showsWeeklyReading, weeklyRing != .off, snapshot.localModel == nil else { return nil }
+        return snapshot.weeklyFraction
     }
 
     var body: some View {
@@ -288,7 +299,7 @@ struct ProviderCell: View {
                 bandOverride: snapshot.bandOverride
             )
             Text(readingText)
-                .font(Typography.percent)
+                .font(snapshot.hasReading && weeklyReading != nil ? Typography.percentPair : Typography.percent)
                 .foregroundStyle(snapshot.showsLocalPerformance && snapshot.localPerformance == nil
                                  ? Palette.textSecondary : Palette.textPrimary)
                 // Keep local speeds inside the ring's column so longer units
@@ -327,6 +338,10 @@ struct ProviderCell: View {
     }
 }
 
+private struct WeeklyReadingKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
 private struct WeeklyRingDashedKey: EnvironmentKey {
     static let defaultValue: Bool = false
 }
@@ -335,6 +350,12 @@ extension EnvironmentValues {
     var weeklyRingDashed: Bool {
         get { self[WeeklyRingDashedKey.self] }
         set { self[WeeklyRingDashedKey.self] = newValue }
+    }
+
+    /// Whether a cell's reading adds the weekly percentage.
+    var weeklyReading: Bool {
+        get { self[WeeklyReadingKey.self] }
+        set { self[WeeklyReadingKey.self] = newValue }
     }
 }
 

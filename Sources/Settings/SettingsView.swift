@@ -813,6 +813,7 @@ struct SettingsView: View {
 
                 if preferences.weeklyRing != .off {
                     Toggle(L10n.t("Dashed weekly ring"), isOn: $preferences.weeklyRingDashed)
+                    Toggle(L10n.t("Weekly % in the reading"), isOn: $preferences.weeklyReading)
                 }
 
                 Toggle(L10n.t("Claude daily pace ring"), isOn: $preferences.claudeDailyPaceRing)

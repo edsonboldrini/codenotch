@@ -139,6 +139,7 @@ struct NotchRootView: View {
             reduceTransparency: reduceTransparency
         ))
         .environment(\.weeklyRingDashed, model.weeklyRingDashed)
+        .environment(\.weeklyReading, model.weeklyReading)
         .environment(\.usageWatchLimit, model.watchLimit)
         .environment(\.usageCriticalLimit, model.criticalLimit)
     }

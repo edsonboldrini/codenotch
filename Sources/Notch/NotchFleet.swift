@@ -58,6 +58,7 @@ final class NotchFleet {
     /// ring on one display and not another would read as a bug.
     private var weeklyRing: WeeklyRing = .off
     private var weeklyRingDashed: Bool = false
+    private var weeklyReading: Bool = false
     private var showsMoveHandle = true
     private var foldsForFullScreen = true
     private var surfaceStyle: NotchSurfaceStyle = .glass
@@ -176,6 +177,13 @@ final class NotchFleet {
         self.foldsForFullScreen = foldsForFullScreen
         for controller in controllers.values {
             controller.apply(foldsForFullScreen: foldsForFullScreen)
+        }
+    }
+
+    func apply(weeklyReading: Bool) {
+        self.weeklyReading = weeklyReading
+        for controller in controllers.values {
+            controller.model.weeklyReading = weeklyReading
         }
     }
 
@@ -423,6 +431,7 @@ final class NotchFleet {
         controller.model.criticalLimit = criticalLimit
         controller.model.weeklyRing = weeklyRing
         controller.model.weeklyRingDashed = weeklyRingDashed
+        controller.model.weeklyReading = weeklyReading
         controller.model.showsMoveHandle = showsMoveHandle
         controller.model.surfaceStyle = surfaceStyle
         controller.model.deepSeekPricingEnabled = deepSeekPricingEnabled
